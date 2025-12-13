@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "108126633602",
+    "project_id": "flutter-shopsync-app",
+    "storage_bucket": "flutter-shopsync-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108126633602:android:6e53da940db5e0cc527e9b",
+        "android_client_info": {
+          "package_name": "com.example.my_flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwBZc6nQh2zFyY5yTu33t7zr22uZTIaww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108126633602:android:a56e7c9adad36977527e9b",
+        "android_client_info": {
+          "package_name": "com.example.shopsync_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwBZc6nQh2zFyY5yTu33t7zr22uZTIaww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
