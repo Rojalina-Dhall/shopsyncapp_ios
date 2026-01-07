@@ -1,10 +1,15 @@
-import 'dart:typed_data';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopsync_app/Pages/Homepage.dart';
+
 import 'package:shopsync_app/Pages/loginpage.dart';
 import 'package:shopsync_app/services/auth_service.dart';
+import 'package:shopsync_app/widgets/gradient_button.dart';
+import 'package:shopsync_app/widgets/text_field.dart';
+import 'package:shopsync_app/resources/validate_methods.dart';
+
+
 
 
 class UserRegistration extends StatefulWidget {
@@ -35,27 +40,49 @@ class _UserRegistrationState extends State<UserRegistration> {
     cityController.dispose();
     super.dispose();
   }
+Future<void> signup() async {
+  if (!_formKey.currentState!.validate()) return;
 
-  Future<void> signup() async {
-  if (_formKey.currentState!.validate()) {
-    // 1️⃣ Sign up the user
+  // Show loader
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(child: CircularProgressIndicator()),
+  );
+
+  try {
     await _authService.signupUser(
-      email: emailController.text.trim(),
-      password: pwdController.text.trim(),
-      name: nameController.text.trim(),
-      city: cityController.text.trim(),
-      context: context,
+      email: emailController.text,
+      password: pwdController.text,
+      name: nameController.text,
+      city: cityController.text,
     );
 
-    
+    if (!mounted) return;
 
-    // 4️⃣ Navigate to HomePage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => HomePage()),
+    Navigator.of(context).pop(); // ✅ close loader
+    Navigator.of(context).pop(); // ✅ close registration page
+
+    // ❌ DO NOT navigate to Home
+    // RootPage will show HomeNavigationScreen automatically
+
+  } catch (e) {
+    Navigator.of(context).pop(); // close loader
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          e is FirebaseAuthException
+              ? e.message ?? "Signup failed"
+              : "Something went wrong",
+        ),
+      ),
     );
   }
 }
+
+
+
 
 
   @override
@@ -66,23 +93,38 @@ class _UserRegistrationState extends State<UserRegistration> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        // backgroundColor: const Color(0xFF0A84FF),
-        title: const Text("User Registration",style: TextStyle(
-      color: Colors.white,  // 👈 Title color
-    ),),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+  elevation: 0,
+  centerTitle: true,
+  title: const Text(
+    "Get Started",
+    style: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w600,
+    ),
+  ),
+  flexibleSpace: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          Color(0xFF6A5AE0),
+          Color(0xFF8E7BFF),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
+    ),
+  ),
+),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
             child: Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              shadowColor: Colors.deepPurpleAccent.withOpacity(0.3),
+  elevation: 10,
+  shadowColor: const Color(0xFF6A5AE0).withOpacity(0.35),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(24),
+  ),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: screenHeight * 0.04,
@@ -101,48 +143,57 @@ class _UserRegistrationState extends State<UserRegistration> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
-                      _buildTextField(nameController, "Name", false),
+                      AppTextField(
+  controller: nameController,
+  label: "Name",
+  isPassword: false,
+  validator: ValidateMethods().validateName,
+),
+
                       SizedBox(height: screenHeight * 0.02),
-                      _buildTextField(emailController, "Email", false,
-                          keyboard: TextInputType.emailAddress),
+                      AppTextField(
+  controller: emailController,
+  label: "Email",
+  isPassword: false,
+  keyboard: TextInputType.emailAddress,
+  validator: ValidateMethods().validateEmail,
+),
+
+                         
                       SizedBox(height: screenHeight * 0.02),
-                      _buildTextField(pwdController, "Password", true),
+                     AppTextField(
+  controller: pwdController,
+  label: "Password",
+  isPassword: true,
+  validator: ValidateMethods().validatePassword,
+),
+
                       SizedBox(height: screenHeight * 0.02),
-                      _buildTextField(confirmPwdController, "Confirm Password", true,
-                          validator: (value) {
-                        if (value != pwdController.text) {
-                          return "Passwords do not match";
-                        }
-                        return null;
-                      }),
+                      AppTextField(
+  controller: confirmPwdController,
+  label: "Confirm Password",
+  isPassword: true,
+  validator: (value) =>
+      ValidateMethods().validateConfirmPassword(value, pwdController.text),
+),
+
+                          
                       SizedBox(height: screenHeight * 0.02),
-                      _buildTextField(cityController, "City", false),
+                     AppTextField(
+  controller: cityController,
+  label: "City",
+  isPassword: false,
+  validator: ValidateMethods().validateCityName,
+),
+
                       SizedBox(height: screenHeight * 0.04),
-                      GestureDetector(
-                        onTap: signup,
-                        child: Container(
-                          width: double.infinity,
-                          height: screenHeight * 0.065,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient:  LinearGradient(
-                               colors: [Colors.deepPurple, Colors.purpleAccent],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Register",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                    GradientButton(
+  text: "Register",
+  width: screenWidth * 0.6, // 👈 narrower
+  height: screenHeight * 0.06,
+  onTap: signup,
+),
+
                       SizedBox(height: screenHeight * 0.02),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -158,12 +209,14 @@ class _UserRegistrationState extends State<UserRegistration> {
                           
                             child: const Text(
                               "Login",
-                              style: TextStyle(color: Colors.deepPurple),
+                              style: TextStyle(color: Colors.indigo),
                             ),
                           ),
                         ],
                       ),
+                      
                     ],
+                  
                   ),
                 ),
               ),
@@ -173,30 +226,6 @@ class _UserRegistrationState extends State<UserRegistration> {
       ),
     );
   }
-
-  Widget _buildTextField(TextEditingController controller, String label, bool isPassword,
-      {TextInputType keyboard = TextInputType.text, String? Function(String?)? validator}) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPassword,
-      keyboardType: keyboard,
-      validator: validator ??
-          (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter $label";
-            }
-            return null;
-          },
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
 }
+
+  // 🔧 Styled text field
