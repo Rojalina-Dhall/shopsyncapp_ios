@@ -1,8 +1,12 @@
 
 
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopsync_app/Pages/registrationpage.dart';
+import 'package:shopsync_app/Pages/rootpage.dart';
+import 'package:shopsync_app/services/user_service.dart';
 
 import 'firebase_options.dart';
 
@@ -14,6 +18,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await UserService().seedIfNeeded();
+ 
   runApp(MyApp());
 }
 
@@ -46,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: const UserRegistration()
+        home: const RootPage()
    
 
     );

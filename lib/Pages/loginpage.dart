@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shopsync_app/Pages/Homepage.dart';
-import 'package:shopsync_app/Pages/registrationpage.dart'; // rename if needed
+
+import 'package:shopsync_app/Pages/registrationpage.dart';
+import 'package:shopsync_app/widgets/gradient_button.dart'; // rename if needed
+import 'package:shopsync_app/widgets/text_field.dart';
+import 'package:shopsync_app/resources/validate_methods.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,10 +34,7 @@ class _LoginPageState extends State<LoginPage> {
           password: pwdController.text.trim(),
         );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomePage()),
-        );
+       
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login failed: ${e.toString()}")),
@@ -51,13 +51,25 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text(
-          "Login",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+  centerTitle: true,
+  title: const Text(
+    "Login",
+    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+  ),
+  flexibleSpace: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          Color(0xFF6A5AE0),
+          Color(0xFF8E7BFF),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
+    ),
+  ),
+),
+
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -88,42 +100,33 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: screenHeight * 0.03),
 
                       // 🔹 Email Field
-                      _buildTextField(emailController, "Email", false,
-                          keyboard: TextInputType.emailAddress),
+                      AppTextField(
+  controller: emailController,
+  label: "Email",
+  isPassword: false,
+  keyboard: TextInputType.emailAddress,
+  validator: ValidateMethods().validateEmail,
+),
 
                       SizedBox(height: screenHeight * 0.02),
 
                       // 🔹 Password Field
-                      _buildTextField(pwdController, "Password", true),
+                      AppTextField(
+  controller: pwdController,
+  label: "Password",
+  isPassword: true,
+  validator: ValidateMethods().validatePassword,
+),
 
                       SizedBox(height: screenHeight * 0.04),
 
                       // 🔹 Gradient Login Button
-                      GestureDetector(
-                        onTap: login,
-                        child: Container(
-                          width: double.infinity,
-                          height: screenHeight * 0.065,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient: const LinearGradient(
-                              colors: [Colors.deepPurple, Colors.purpleAccent],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      GradientButton(
+  text: "Login",
+  onTap: login,
+  width: screenWidth * 0.75, // 👈 controlled width
+),
+
 
                       SizedBox(height: screenHeight * 0.02),
 
@@ -142,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: const Text(
                               "Register",
-                              style: TextStyle(color: Colors.deepPurple),
+                              style: TextStyle(color: Colors.indigo),
                             ),
                           ),
                         ],
@@ -158,33 +161,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 🔧 Styled text field
-  Widget _buildTextField(
-      TextEditingController controller, String label, bool isPassword,
-      {TextInputType keyboard = TextInputType.text,
-      String? Function(String?)? validator}) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPassword,
-      keyboardType: keyboard,
-      validator: validator ??
-          (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter $label";
-            }
-            return null;
-          },
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
+  
 }

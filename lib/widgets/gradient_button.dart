@@ -1,47 +1,56 @@
+// import 'package:flutter/material.dart';
+
 import 'package:flutter/material.dart';
 
 class GradientButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
+  final String text;
+  final VoidCallback onTap;
+  final double width;
+  final double height;
+  final double borderRadius;
 
   const GradientButton({
     super.key,
-    required this.label,
-    required this.onPressed,
+    required this.text,
+    required this.onTap,
+    this.width = double.infinity,
+    this.height = 52,
+    this.borderRadius = 30,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        height: 55,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFF0A84FF), // Light Blue
-              Color(0xFF4D9FFF), // Darker Blue
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 4),
-              blurRadius: 6,
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(borderRadius),
+          splashColor: Colors.deepPurpleAccent.withOpacity(0.18),
+          highlightColor: Colors.deepPurpleAccent.withOpacity(0.08),
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadius),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF6A5AE0),
+                  Color(0xFF8E7BFF),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
