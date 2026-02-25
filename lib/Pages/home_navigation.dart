@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shopsync_app/Pages/HomePage.dart';
-import 'package:shopsync_app/Pages/fetchusername.dart';
 import 'package:shopsync_app/Pages/rewardspage.dart';
 import 'package:shopsync_app/Pages/purchasespage.dart';
 import 'package:shopsync_app/Pages/profilepage.dart';
@@ -68,38 +67,12 @@ void initState() {
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
-      appBar: AppBar(
-  elevation: 0,
-  centerTitle: true,
-  backgroundColor: Colors.transparent, // IMPORTANT
-  flexibleSpace: Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          Color(0xFF6A5AE0),
-          Color(0xFF8E7BFF),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    ),
-  ),
-  title: Text(
-    _currentIndex == 0
-        ? (_loadingUser
-            ? 'Welcome back'
-            : 'Welcome back, $_userName 👋')
-        : _titles[_currentIndex],
-    style: const TextStyle(color: Colors.black),
-  ),
-  
-),
-      body: SafeArea(
-        child: IndexedStack(
+      
+      body:  IndexedStack(
           index: _currentIndex,
           children: _pages,
         ),
-      ),
+      
 //       
 
 bottomNavigationBar: Container(

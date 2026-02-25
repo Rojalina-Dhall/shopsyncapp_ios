@@ -7,27 +7,41 @@ class WelcomeUserText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser;
 
-    return StreamBuilder<DocumentSnapshot>(
+    if (user == null) {
+      return const Text(
+        'Welcome 👋',
+        style: TextStyle(color: Colors.white),
+      );
+    }
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc(uid)
+          .doc(user.uid)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || !snapshot.data!.exists) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text(
-            'Welcome',
-            style: TextStyle(color: Colors.white),
+            'Welcome 👋',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           );
         }
 
-        final name = snapshot.data!['name'] ?? '';
+        final data = snapshot.data?.data();
+        final name = data?['name'] ?? '';
 
         return Text(
-          'Welcome back, $name 👋',
+          name.isEmpty
+              ? 'Welcome 👋'
+              : 'Welcome back, $name 👋',
           style: const TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),

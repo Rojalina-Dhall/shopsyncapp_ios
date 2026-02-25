@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
   centerTitle: true,
   title: const Text(
-    "Login",
+    "Welcome Back",
     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
   ),
   flexibleSpace: Container(
@@ -70,10 +70,14 @@ class _LoginPageState extends State<LoginPage> {
   ),
 ),
 
-      body: Center(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
+            padding: EdgeInsets.only(
+      top: screenHeight * 0.10, // 👈 move card UP
+      left: screenWidth * 0.06,
+      right: screenWidth * 0.06,
+      bottom: screenHeight * 0.04,
+    ),
             child: Card(
               elevation: 5,
               shape: RoundedRectangleBorder(
@@ -90,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       Text(
-                        "Welcome Back",
+                        "Login",
                         style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -157,8 +161,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-    );
+      );
+  
   }
 
   

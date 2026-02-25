@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopsync_app/Pages/home_navigation.dart';
 import 'package:shopsync_app/Pages/loginpage.dart';
-import 'package:shopsync_app/Pages/registrationpage.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});
