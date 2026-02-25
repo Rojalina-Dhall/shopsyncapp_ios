@@ -10,6 +10,18 @@ class CategorySection extends StatelessWidget {
     required this.categoryId,
   });
 
+  String _formatCategory(String value) {
+  return value
+      .replaceAll('_', ' ')
+      .split(' ')
+      .map((word) =>
+          word.isNotEmpty
+              ? '${word[0].toUpperCase()}${word.substring(1)}'
+              : '')
+      .join(' ');
+}
+
+
   @override
   Widget build(BuildContext context) {
     if (categoryId == 'all') {
@@ -25,11 +37,16 @@ class CategorySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: Text(
-            "ALL STORES",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+            "All Stores",
+            style: const TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.2,
+      color: Color(0xFF1F1F1F),
+    ),
+          )
         ),
         SizedBox(
           height: 80, // small height for logos
@@ -49,9 +66,13 @@ class CategorySection extends StatelessWidget {
               // Grocery-first sorting
               docs.sort((a, b) {
                 if (a['categoryId'] == 'groceries' &&
-                    b['categoryId'] != 'groceries') return -1;
+                    b['categoryId'] != 'groceries') {
+                  return -1;
+                }
                 if (a['categoryId'] != 'groceries' &&
-                    b['categoryId'] == 'groceries') return 1;
+                    b['categoryId'] == 'groceries') {
+                  return 1;
+                }
                 return 0;
               });
 
@@ -94,16 +115,17 @@ class CategorySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Text(
-                categoryId.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+  _formatCategory(categoryId),
+  style: TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: Colors.grey.shade800,
+  ),
+),
             ),
-            SizedBox(height: 80, child: _buildStoreList(stores)),
+            SizedBox(height: 60, child: _buildStoreList(stores)),
           ],
         );
       },
@@ -112,15 +134,15 @@ class CategorySection extends StatelessWidget {
 Widget _buildStoreList(List<StoreModel> stores) {
   return ListView.builder(
     scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.symmetric(horizontal: 16),
+    padding: const EdgeInsets.symmetric(horizontal: 12),
     itemCount: stores.length,
     itemBuilder: (context, index) {
       final store = stores[index];
 
       return Padding(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right: 8),
         child: CircleAvatar(
-          radius: 33,
+          radius: 28,
           backgroundImage: NetworkImage(store.logoUrl),
           backgroundColor: Colors.transparent,
         ),

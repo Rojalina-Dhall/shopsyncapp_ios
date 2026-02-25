@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopsync_app/Pages/registrationpage.dart';
 import 'package:shopsync_app/Pages/rootpage.dart';
+import 'package:shopsync_app/services/seed_service.dart';
 import 'package:shopsync_app/services/user_service.dart';
 
 import 'firebase_options.dart';
@@ -18,13 +19,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await UserService().seedIfNeeded();
+  await SeedService().seedIfNeeded();
  
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
   
 
   
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -78,7 +80,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final int _counter = 0;
   
 
   Future<void> _incrementCounter() async {
